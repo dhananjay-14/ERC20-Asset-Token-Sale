@@ -1,0 +1,35 @@
+{
+  "name": "nft-box",
+  "version": "1.0.0",
+  "description": "Boilerplate for creating an NFT collection",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/truffle-box/nft-box.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/truffle-box/nft-box/issues"
+  },
+  "homepage": "https://github.com/truffle-box/nft-box#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.0.0-beta.0",
+    "@truffle/hdwallet-provider": "^2.1.3",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "chai-bn": "^0.3.1",
+    "dotenv": "^16.0.3",
+    "truffle-assertions": "^0.9.2",
+    "typescript": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.31"
+  }
+}
