@@ -9,9 +9,9 @@ import "./App.css";
 
 class App extends Component {
   state = { loaded: false, kycAddress: "0x00...", tokenSaleAddress: "", userTokens: 0 };
-
+  
   componentDidMount = async () => {
-    try {
+    try {      
       // Get network provider and web3 instance.
       this.web3 = await getWeb3();
 
