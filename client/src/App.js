@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { useState,useEffect  } from "react";
 import MyToken from "./contracts/MyToken.json";
 import MyTokenSale from "./contracts/MyTokenSale.json";
 import KycContract from "./contracts/KycContract.json";
@@ -6,9 +7,16 @@ import Crowdsale from "./contracts/Crowdsale.json";
 import Wallet from "./contracts/Wallet.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
+import Web3 from "web3";
+
+
 
 class App extends Component {
   state = { loaded: false, kycAddress: "0x00...", tokenSaleAddress: "", userTokens: 0 };
+  state = { connectMessage:'Connect',currentAccount:null}
+
+  // const [connectMessage,setConnectMessage] = useState("Connect");
+  // const [currentAccount, setCurrentAccount]= useState("");
   
   componentDidMount = async () => {
     try {      
@@ -36,7 +44,9 @@ class App extends Component {
       this.Wallet = new this.web3.eth.Contract(
         Wallet.abi,
         Wallet.networks[this.networkId] && Wallet.networks[this.networkId].address,);
-      this.listenToTokenTransfer();
+       this.getCurrentWalletConnected();
+      //  this.addWalletListener();
+        this.listenToTokenTransfer();
       // this.getWalletBalance();
       this.setState({ loaded: true, tokenSaleAddress: MyTokenSale.networks[this.networkId].address, }, this.updateUserTokens);
 
@@ -48,8 +58,67 @@ class App extends Component {
       console.error(error);
     }
   };
+   connectWallet = async()=>{
+  
+    if(typeof window!= "undefined" && typeof window.ethereum !="undefined") {
+      try{
+          //metamask is already installed!
+          const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+         // setConnectMessage('Connected');
 
+         this.setState({connectMessage :'Connected'})
+          //setCurrentAccount(accounts[0]);
+          this.setState({currentAccount: accounts[0]});
+          console.log(this.state.currentAccount);
 
+      }
+      catch(err){
+          console.log(err);
+      }
+    }
+    else{
+      console.log("metamask is not installed!! please install metamask.")
+    }
+  }
+  getCurrentWalletConnected = async()=>{
+    
+    if(typeof window!= "undefined" && typeof window.ethereum !="undefined") {
+      try{
+        
+          const accounts = await window.ethereum.request({method: "eth_accounts"});
+          if(accounts.length>0){
+            this.setState({connectMessage :'Connected'});
+            this.setState({currentAccount: accounts[0]});
+            console.log(this.state.currentAccount);
+          }
+          else{
+            console.log("connect to metamask");
+          }
+
+      }
+      catch(err){
+          console.log(err);
+      }
+    }
+    else{
+      console.log("metamask is not installed!! please install metamask.")
+    }
+  }
+  // addWalletListener = async()=>{
+  
+  //   if(typeof window!= "undefined" && typeof window.ethereum !="undefined") {
+  //     window.ethereum.on("accountsChanged",(accounts)=>{
+  //       this.setState({currentAccount: accounts[0]});
+  //       console.log(this.state.currentAccount);
+  //     })
+    
+  //   }
+  //   else{
+  //     this.setState({currentAccount:""});
+  //     console.log("metamask is not installed!! please install metamask.")
+  //   }
+  // }
+  
   render() {
     if (!this.state.loaded) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -65,6 +134,8 @@ class App extends Component {
           <span class="addresstext">Address to allow:</span> <input type="text" class="input_text" name="kycAddress" value={this.state.kycAddress} onChange={this.handleInputChange} />
           <button type="button" class="btn" onClick={this.handleKycSubmit}>Complete KYC</button>
           <button type="button" class="btn" onClick={this.getWalletBalance}>Wallet Balance</button>
+           <button type="button" class="btn" onClick={this.connectWallet}>{this.state.connectMessage}:{this.state.currentAccount}</button> 
+           
         </div>
         <div class="box2">
           <h2>User Tokens</h2>
@@ -113,5 +184,10 @@ class App extends Component {
       [name]: value
     });
   }
+   
+
+    
+  
 }
+
 export default App;
